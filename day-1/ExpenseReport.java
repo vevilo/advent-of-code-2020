@@ -1,3 +1,6 @@
+import java.util.*;
+import java.io.*;
+
 public class ExpenseReport
 {
 	public static void main(String[] args)
@@ -5,7 +8,7 @@ public class ExpenseReport
 		final int SUM = 2020;
 		int[] expenses = new int[200];
 
-		readFileToIntArray(report.txt, expenses);
+		readFileToIntArray("report.txt", expenses);
 
 		for (int i = 0; i < expenses.length; i++)
 		{
@@ -21,6 +24,23 @@ public class ExpenseReport
 
 	private static void readFileToIntArray(String filename, int[] array)
 	{
-		//stuff
+		try
+		{
+			File file = new File(filename);
+			Scanner reader = new Scanner(file);
+			int lineNum = 0;
+
+			while (reader.hasNextLine())
+			{
+				array[lineNum] = Integer.parseInt(reader.nextLine());
+				lineNum++;
+			}
+
+			reader.close();
+		}
+		catch (IOException e)
+		{
+			System.out.println("Error occurred!");
+		}
 	}
 }
