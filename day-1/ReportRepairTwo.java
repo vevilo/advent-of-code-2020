@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class ExpenseReport
+public class ReportRepairTwo
 {
 	public static void main(String[] args)
 	{
@@ -14,9 +14,12 @@ public class ExpenseReport
 		{
 			for (int j = i + 1; j < expenses.length; j++)
 			{
-				if (expenses[i] + expenses[j] == SUM)
+				for (int k = j + 1; k < expenses.length; k++)
 				{
-					System.out.println(expenses[i] * expenses[j]);
+					if (expenses[i] + expenses[j] + expenses[k] == SUM)
+					{
+						System.out.println(expenses[i] * expenses[j] * expenses[k]);
+					}
 				}
 			}
 		}

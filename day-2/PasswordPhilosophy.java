@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class PasswordPolicyTwo
+public class PasswordPhilosophy
 {
 	public static void main(String[] args)
 	{
@@ -19,7 +19,7 @@ public class PasswordPolicyTwo
 			String[] tokens;
 			String line;
 
-			int one, two;
+			int min, max, total;
 			char specialCharacter;
 			String password;
 
@@ -28,12 +28,21 @@ public class PasswordPolicyTwo
 				line = reader.nextLine();
 				tokens = line.split("[- :]");
 
-				one = Integer.parseInt(tokens[0]);
-				two = Integer.parseInt(tokens[1]);
+				min = Integer.parseInt(tokens[0]);
+				max = Integer.parseInt(tokens[1]);
 				specialCharacter = tokens[2].charAt(0);
 				password = tokens[4];
+				total = 0;
 
-				if (password.charAt(one - 1) == specialCharacter ^ password.charAt(two - 1) == specialCharacter)
+				for (int i = 0; i < password.length(); i++)
+				{
+					if (password.charAt(i) == specialCharacter)
+					{
+						total++;
+					}
+				}
+
+				if (total >= min && total <= max)
 				{
 					numValidPasswords++;
 				}
