@@ -1,54 +1,42 @@
 import java.util.*;
 import java.io.*;
 
-<<<<<<< HEAD:day-2/PasswordPhilosophy.java
-public class PasswordPhilosophy
-=======
 public class TobogganTrajectory
->>>>>>> main:day-3/TobogganTrajectory.java
 {
 	public static void main(String[] args)
 	{
-		System.out.println(validatePasswords("passwords.txt"));
+		System.out.println(countTreeCollisions("treemap.txt", 1, 2));
 	}
 
-	private static int validatePasswords(String filename)
+	private static int countTreeCollisions(String filename, int right, int down)
 	{
-		int numValidPasswords = 0;
+		int numTrees = 0;
 
 		try
 		{
 			File file = new File(filename);
 			Scanner reader = new Scanner(file);
-			String[] tokens;
 			String line;
+			int currentX = 0;
 
-			int min, max, total;
-			char specialCharacter;
-			String password;
+			line = reader.nextLine();
+			if (line.charAt(currentX) == '#')
+			{
+				numTrees++;
+			}
 
 			while (reader.hasNextLine())
 			{
-				line = reader.nextLine();
-				tokens = line.split("[- :]");
-
-				min = Integer.parseInt(tokens[0]);
-				max = Integer.parseInt(tokens[1]);
-				specialCharacter = tokens[2].charAt(0);
-				password = tokens[4];
-				total = 0;
-
-				for (int i = 0; i < password.length(); i++)
+				for (int i = 0; i < down; i++)
 				{
-					if (password.charAt(i) == specialCharacter)
-					{
-						total++;
-					}
+					line = reader.nextLine();
 				}
 
-				if (total >= min && total <= max)
+				currentX = (currentX + right) % line.length();
+
+				if (line.charAt(currentX) == '#')
 				{
-					numValidPasswords++;
+					numTrees++;
 				}
 			}
 
@@ -59,6 +47,6 @@ public class TobogganTrajectory
 			System.out.println("Error occurred!");
 		}
 
-		return numValidPasswords;
+		return numTrees;
 	}
 }
