@@ -1,7 +1,11 @@
 import java.util.*;
 import java.io.*;
 
+<<<<<<< HEAD:day-2/PasswordPhilosophy.java
 public class PasswordPhilosophy
+=======
+public class TobogganTrajectory
+>>>>>>> main:day-3/TobogganTrajectory.java
 {
 	public static void main(String[] args)
 	{
