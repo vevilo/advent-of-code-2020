@@ -21,7 +21,6 @@ public class PasswordPhilosophy
 
 			int min, max, total;
 			char specialCharacter;
-			String password;
 
 			while (reader.hasNextLine())
 			{
@@ -31,12 +30,11 @@ public class PasswordPhilosophy
 				min = Integer.parseInt(tokens[0]);
 				max = Integer.parseInt(tokens[1]);
 				specialCharacter = tokens[2].charAt(0);
-				password = tokens[4];
 				total = 0;
 
-				for (int i = 0; i < password.length(); i++)
+				for (int i = 0; i < tokens[4].length(); i++)
 				{
-					if (password.charAt(i) == specialCharacter)
+					if (tokens[4].charAt(i) == specialCharacter)
 					{
 						total++;
 					}
