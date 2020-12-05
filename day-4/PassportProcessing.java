@@ -19,42 +19,31 @@ public class PassportProcessing
 			String line;
 			String[] tokens;
 
-			Set<String> requiredFields = new HashSet<String>();
-			Set<String> presentFields = new HashSet<String>();
-
-			requiredFields.add("byr");
-			requiredFields.add("iyr");
-			requiredFields.add("eyr");
-			requiredFields.add("hgt");
-			requiredFields.add("hcl");
-			requiredFields.add("ecl");
-			requiredFields.add("pid");
-			requiredFields.add("cid");
+			Map<String, String> passport = new HashMap<String, String>();
 
 			while (reader.hasNextLine())
 			{
 				line = reader.nextLine();
 				tokens = line.split("[: ]");
 
-				for (String str : tokens)
+				if (!line.equals(""))
 				{
-					if (requiredFields.contains(str))
+					for (int i = 0; i < tokens.length; i += 2)
 					{
-						presentFields.add(str);
+						passport.put(tokens[i], tokens[i + 1]);
 					}
 				}
-
-				if (line.equals(""))
+				else
 				{
-					if (validatePassport(presentFields))
+					if (passport.size() == 8 || passport.size() == 7 && !passport.containsKey("cid"))
 					{
 						numValidPassports++;
 					}
-					presentFields.clear();
+					passport.clear();
 				}
 			}
 
-			if (validatePassport(presentFields))
+			if (passport.size() == 8 || passport.size() == 7 && !passport.containsKey("cid"))
 			{
 				numValidPassports++;
 			}
@@ -67,16 +56,5 @@ public class PassportProcessing
 		}
 
 		return numValidPassports;
-	}
-
-	private static boolean validatePassport(Set<String> passport)
-	{
-		boolean isValid = false;
-		if (passport.size() == 8 || passport.size() == 7 && !passport.contains("cid"))
-		{
-			isValid = true;
-		}
-
-		return isValid;
 	}
 }

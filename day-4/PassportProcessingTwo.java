@@ -19,44 +19,39 @@ public class PassportProcessingTwo
 			String line;
 			String[] tokens;
 
-			Set<String> requiredFields = new HashSet<String>();
-			Set<String> presentFields = new HashSet<String>();
-
-			requiredFields.add("byr");
-			requiredFields.add("iyr");
-			requiredFields.add("eyr");
-			requiredFields.add("hgt");
-			requiredFields.add("hcl");
-			requiredFields.add("ecl");
-			requiredFields.add("pid");
-			requiredFields.add("cid");
+			Map<String, String> passport = new HashMap<String, String>();
 
 			while (reader.hasNextLine())
 			{
 				line = reader.nextLine();
 				tokens = line.split("[: ]");
 
-				for (int i = 0; i < tokens.length; i += 2)
+				if (!line.equals(""))
 				{
-					if (requiredFields.contains(tokens[i]))
+					for (int i = 0; i < tokens.length; i += 2)
 					{
-						presentFields.add(tokens[i]);
+						passport.put(tokens[i], tokens[i + 1]);
 					}
 				}
-
-				if (line.equals(""))
+				else
 				{
-					if (validatePassport(presentFields))
+					if (passport.size() == 8 || passport.size() == 7 && !passport.containsKey("cid"))
 					{
-						numValidPassports++;
+						if (validatePassport(passport))
+						{
+							numValidPassports++;
+						}
 					}
-					presentFields.clear();
+					passport.clear();
 				}
 			}
 
-			if (validatePassport(presentFields))
+			if (passport.size() == 8 || passport.size() == 7 && !passport.containsKey("cid"))
 			{
-				numValidPassports++;
+				if (validatePassport(passport))
+				{
+					numValidPassports++;
+				}
 			}
 
 			reader.close();
@@ -69,12 +64,62 @@ public class PassportProcessingTwo
 		return numValidPassports;
 	}
 
-	private static boolean validatePassport(Set<String> passport)
+	private static boolean validatePassport(Map<String, String> passport)
 	{
-		boolean isValid = false;
-		if (passport.size() == 8 || passport.size() == 7 && !passport.contains("cid"))
+		boolean isValid = true;
+
+		int byr = Integer.parseInt(passport.get("byr"));
+		int iyr = Integer.parseInt(passport.get("iyr"));
+		int eyr = Integer.parseInt(passport.get("eyr"));
+		String hgt = passport.get("hgt");
+		int hgtMeasurement;
+		String hgtUnit = hgt.substring(hgt.length() - 2);
+		String hcl = passport.get("hcl");
+		String ecl = passport.get("ecl");
+		String pid = passport.get("pid");
+
+		if (byr < 1920 || byr > 2002)
 		{
-			isValid = true;
+			isValid = false;
+		}
+		if (iyr < 2010 || iyr > 2020)
+		{
+			isValid = false;
+		}
+		if (eyr < 2020 || eyr > 2030)
+		{
+			isValid = false;
+		}
+		if (hgt.substring(0, hgt.length() - 2).matches("[0-9]+"))
+		{
+			hgtMeasurement = Integer.parseInt(hgt.substring(0, hgt.length() - 2));
+
+			if ((hgtUnit.equals("cm") && hgtMeasurement < 150 || hgtMeasurement > 193) ||
+			    (hgtUnit.equals("in") && (hgtMeasurement < 59 || hgtMeasurement > 76)))
+			{
+				isValid = false;
+			}
+		}
+		else
+		{
+			isValid = false;
+		}
+		if (!hcl.matches("#[0-9|a-f]{6}"))
+		{
+			isValid = false;
+		}
+		if (!ecl.matches("amb|blu|brn|gry|grn|hzl|oth"))
+		{
+			isValid = false;
+		}
+		if (!pid.matches("[0-9]{9}"))
+		{
+			isValid = false;
+		}
+
+		if (isValid)
+		{
+			System.out.println(byr + " " + iyr + " " + eyr + " " + hgt + " " + hcl + " " + ecl + " " + pid);
 		}
 
 		return isValid;
