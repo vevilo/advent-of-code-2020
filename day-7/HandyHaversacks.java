@@ -10,8 +10,8 @@ public class HandyHaversacks
 
 	private static int countBagsThatCanHold(String filename, String colour)
 	{
-		Set<String> bagHolders = new HashSet<String>();
-		List<String[]> allBags = new LinkedList<String[]>();
+		List<Bag> bagHolders = new LinkedList<Bag>();
+		List<Bag> allBags = new LinkedList<Bag>();
 
 		try
 		{
@@ -24,83 +24,7 @@ public class HandyHaversacks
 			{
 				line = reader.nextLine();
 				tokens = line.split(" bags contain | bag(s)?(,|\\.| )+");
-				allBags.add(tokens);
-			}
-
-			for (String[] bag : allBags) // Add direct holders
-			{
-				addBagHolders(bagHolders, bag, colour);
-			}
-
-			for (Object bagColour : bagHolders.toArray()) // Add indirect holders
-			{
-				for (String[] bag : allBags)
-				{
-					addBagHolders(bagHolders, bag, (String) bagColour);
-				}
-			}
-			for (Object bagColour : bagHolders.toArray())
-			{
-				for (String[] bag : allBags)
-				{
-					addBagHolders(bagHolders, bag, (String) bagColour);
-				}
-			}
-			for (Object bagColour : bagHolders.toArray())
-			{
-				for (String[] bag : allBags)
-				{
-					addBagHolders(bagHolders, bag, (String) bagColour);
-				}
-			}
-			for (Object bagColour : bagHolders.toArray())
-			{
-				for (String[] bag : allBags)
-				{
-					addBagHolders(bagHolders, bag, (String) bagColour);
-				}
-			}
-			for (Object bagColour : bagHolders.toArray())
-			{
-				for (String[] bag : allBags)
-				{
-					addBagHolders(bagHolders, bag, (String) bagColour);
-				}
-			}
-			for (Object bagColour : bagHolders.toArray())
-			{
-				for (String[] bag : allBags)
-				{
-					addBagHolders(bagHolders, bag, (String) bagColour);
-				}
-			}
-			for (Object bagColour : bagHolders.toArray())
-			{
-				for (String[] bag : allBags)
-				{
-					addBagHolders(bagHolders, bag, (String) bagColour);
-				}
-			}
-			for (Object bagColour : bagHolders.toArray())
-			{
-				for (String[] bag : allBags)
-				{
-					addBagHolders(bagHolders, bag, (String) bagColour);
-				}
-			}
-			for (Object bagColour : bagHolders.toArray())
-			{
-				for (String[] bag : allBags)
-				{
-					addBagHolders(bagHolders, bag, (String) bagColour);
-				}
-			}
-			for (Object bagColour : bagHolders.toArray())
-			{
-				for (String[] bag : allBags)
-				{
-					addBagHolders(bagHolders, bag, (String) bagColour);
-				}
+				allBags.add(new Bag(tokens));
 			}
 
 			reader.close();
@@ -109,26 +33,31 @@ public class HandyHaversacks
 		{
 			System.out.println("Error occurred!");
 		}
-
-		return bagHolders.size();
-	}
-
-	private static void addBagHolders(Set<String> bags, String[] thisBag, String colour)
-	{
-		String holds;
-
-		for (int i = 1; i < thisBag.length; i++)
+		
+		for (Bag bag : allBags) // Add bags that contain 'shiny gold'
 		{
-			holds = getBagColour(thisBag[i]);
-			if (holds.equals(colour))
+			if (bag.containsBag(colour))
 			{
-				bags.add(thisBag[0]);
+				bagHolders.add(bag);
 			}
 		}
-	}
 
-	private static String getBagColour(String bag)
-	{
-		return bag.substring(2);
+		for (int i = 0; i < bagHolders.size(); i++) // Add bags that contain bags that contain 'shiny gold'
+		{
+			for (Bag bag : allBags)
+			{
+				if (bag.containsBag(bagHolders.get(i).getColour()))
+				{
+					bagHolders.add(bag);
+				}
+			}
+
+			for (Bag usedBag : bagHolders) // Remove used bags
+			{
+				allBags.remove(usedBag);
+			}
+		}
+
+		return bagHolders.size();
 	}
 }
